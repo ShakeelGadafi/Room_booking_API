@@ -11,7 +11,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/ShakeelGadafi/Room_booking_API/issues"
   },
-  "homepage": "https://github.com/ShakeelGadafi/Room_booking_API#readme"
+  "homepage": "https://github.com/ShakeelGadafi/Room_booking_API#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.4"
+  }
 }
