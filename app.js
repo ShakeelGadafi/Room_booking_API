@@ -18,5 +18,7 @@ const pool = require('./configure/db');
 
 app.use('/rooms', require('./routes/rooms.routes'));
 
+app.use('/reservation',require('./routes/reservations.routes'));
+
 
 module.exports = app;
