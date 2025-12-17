@@ -1,0 +1,605 @@
+{
+  "info": {
+    "_postman_id": "78ecbcc6-4557-4916-aa1f-6193cf698076",
+    "name": "Room Booking API",
+    "description": "A RESTful API for managing room bookings and reservations, built with Node.js, Express, and PostgreSQL.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "getAllRooms",
+          "id": "53903504-721f-434d-878f-e922b8fce146",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description**  \nRetrieve the list of all available rooms.\n\n**Request**\n\n- **Method:** `GET`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:** None\n    \n- **Body:** None\n    \n\n**Success Response (200 OK)**\n\n**Error Responses**\n\n- `500 Internal Server Error` – Server failure while fetching rooms."
+          },
+          "response": []
+        },
+        {
+          "name": "createNewRoom",
+          "id": "fb946af5-a137-43e6-8be3-50ae59062b0a",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":160 ,\r\n\"category\":\"Double\",\r\n\"beds\": 2,\r\n\"price\":10050\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description**\n\nCreate a new room\n\n**Request**\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n\nSuccess Response (201 Created)"
+          },
+          "response": []
+        },
+        {
+          "name": "duplicate",
+          "id": "5fc712c3-44d4-4e63-bfc9-1409f2b5aeeb",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":107 ,\r\n\"category\":\"Double\",\r\n\"beds\": 2,\r\n\"price\": 10000\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description**\n\nAttempt to create a room with an existing `room_number`.\n\n**Request**\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Error Response (409 Conflict)**\n\n{ \"message\": \"Room number already exists\"}\n\n**Notes**\n\n- Triggered when `room_number` violates the unique constraint."
+          },
+          "response": []
+        },
+        {
+          "name": "bedNumericError",
+          "id": "190f8c78-469d-4d99-8efa-db6261589622",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":158 ,\r\n\"category\":\"Double\",\r\n\"beds\": \"kk\",\r\n\"price\": 1000\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description:**\n\nTest to ensure the `beds` field is numeric. If a string or invalid value is provided, the API should return an error.\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Expected Response:**\n\n**Status:** `400 Bad Request`\n\n**Body:**\n\n{\n\n\"message\": \"beds must be a positive number\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "priceNumericError",
+          "id": "6a204432-24cb-418e-9d71-5b149135c789",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":158 ,\r\n\"category\":\"Double\",\r\n\"beds\": 2,\r\n\"price\": \"1000\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description:**\n\nTest to ensure the `price` field is numeric. If a string or invalid value is provided, the API should return an error.\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Expected Response:**\n\n**Status:** `400 Bad Request`\n\n**Body:**\n\n{\n\n\"message\": \"price must be a positive number\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "bedNumNegativeError",
+          "id": "d4250244-1ba3-4335-a986-4d0b6470cf96",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":70 ,\r\n\"category\":\"Double\",\r\n\"beds\": -2,\r\n\"price\": 1000\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description:**\n\nChecks that the `beds` field cannot be zero or negative. API should reject invalid values.\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Status:** `400 Bad Request`\n\n**Body:**\n\n{\n\n\"message\": \"beds must be a positive number\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "priceNumNegativeError",
+          "id": "5cc06f10-2d40-473b-9ebb-866c1207f93c",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":70 ,\r\n\"category\":\"Double\",\r\n\"beds\": 2,\r\n\"price\":-1000\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "**Description:**\n\nChecks that the `price` field cannot be zero or negative. API should reject invalid values.\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/rooms`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Status:** `400 Bad Request`\n\n**Body:**\n\n{\n\n\"message\": \"price must be a positive number\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "updatingExistingRoomDetails",
+          "id": "34ffb407-c599-4167-a231-ce1e3931fa95",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " { \r\n        \"room_number\": \"100\",\r\n        \"category\": \"Sin\",\r\n        \"price\": 500,\r\n        \"beds\": 1\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms",
+                "1"
+              ]
+            },
+            "description": "**Description:**\n\nUpdates the details of an existing room by `id`. You can update one or multiple fields (partial updates are supported)\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`{\n    \n\n```\n \n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "deleteRoomId",
+          "id": "14969b1c-2dfb-4b1f-8a2b-02d2a01bccdb",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms/18",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms",
+                "18"
+              ]
+            },
+            "description": "**Description:**\n\nDeletes a room by its `id`. Returns the deleted room details if successful.\n\n- **Method:** `DELETE`\n    \n- **URL:** `http://localhost:3000/rooms/18`\n    \n- **Headers:**\n    \n\n**Expected Response:**\n\n- **Status:** `200 OK`"
+          },
+          "response": []
+        },
+        {
+          "name": "updatingOnlyOneAttribute",
+          "id": "b3adc0b5-ee0f-439f-aff7-7d22dd1e7166",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n       \r\n        \"category\": \"mikey\"\r\n    \r\n       \r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/rooms/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "rooms",
+                "1"
+              ]
+            },
+            "description": "**Description:**\n\nUpdates the details of an existing room by `id`. You can update one or multiple fields (partial updates are supported)\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`"
+          },
+          "response": []
+        }
+      ],
+      "id": "ebeb0900-a7ad-4b4b-8963-07d1b04b3ac4",
+      "description": "The Room API allows you to **manage rooms**. You can create new rooms and list all existing rooms. It ensures proper validation for all fields and prevents duplicate room numbers."
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "allReservations",
+          "id": "4f1eafcf-7e58-4d43-835a-5530b858da41",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "**Description**  \nRetrieve the list of all reservations.\n\n**Request**\n\n- **Method:** `GET`\n    \n- **URL:** `http://localhost:3000/reservations`\n    \n- **Headers:** None\n    \n- **Body:** None\n    \n\n**Success Response (200 OK)**\n\n**Error Responses**\n\n- `500 Internal Server Error` – Server error"
+          },
+          "response": []
+        },
+        {
+          "name": "listReservationByRoom",
+          "id": "cde64640-7aca-449c-b43d-e71e57d65290",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/reservations/room/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations",
+                "room",
+                "2"
+              ]
+            },
+            "description": "**Description**\n\nRetrieve all reservations for a specific room.\n\n**Request**\n\n- **Method:** `GET`\n    \n- [http://localhost:3000/reservations/room/2](http://localhost:3000/reservations/room/2)\n    \n- **Headers:** None\n    \n- **Body:** None\n    \n\n**Success Response (200 OK)**\n\nStartFragment\n\n**Error Responses**\n\n- `400 Not Found` – Room not found\n    \n- `500 Internal Server Error` – Server error"
+          },
+          "response": []
+        },
+        {
+          "name": "emptyReservationByRoom",
+          "id": "d82c6dcb-ed25-4866-b90c-f9a6c5c799a9",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/reservations/room/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations",
+                "room",
+                "5"
+              ]
+            },
+            "description": "**Description:**\n\nTest to retrieve reservations for a room that currently has **no reservations**. The API should return a message indicating no reservations found.\n\n**Request**\n\n- **Method:** `GET`\n    \n- **URL:** `http://localhost:3000/reservations/room/2`\n    \n- **Headers:** None\n    \n- **Body:** None\n    \n\n**Success Response (200 OK)**\n\n**Error Responses**\n\n- `500 Internal Server Error` – Server error\n    \n\n**Body:**\n\n{\n\n\"message\": \"No reservations found for this room\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "checkingIfTheyOverLap",
+          "id": "747d44fd-4719-4614-8aa8-f3486ad15dfc",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"room_id\":3,\r\n    \"guest_name\":\"hakeel\",\r\n    \"check_in\": \"2025-12-21\",\r\n  \"check_out\": \"2025-12-26\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "**Description**\n\nAttempt to create a reservation that overlaps with an existing booking for the same room.\n\n**Request**\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/reservations`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Error Response (400 Conflict)**\n\n{\n\nmessage: Room is already booked for the selected dates  \n  \n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "createReservations",
+          "id": "367796d5-e61b-4848-8bcd-24a6aace17eb",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"room_id\":3,\r\n    \"guest_name\":\"Shl\",\r\n    \"check_in\": \"2025-12-26\",\r\n  \"check_out\": \"2025-12-28\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "**Description**\n\nCreate a new reservation for a room.\n\n**Request**\n\n- **Method:** `POST`\n    \n- URL: [http://localhost:3000/reservations](http://localhost:3000/reservations)\n    \n\nSuccess Response (201 Created)\n\n**Error Responses**\n\n- `500 Internal Server Error` – Server error"
+          },
+          "response": []
+        },
+        {
+          "name": "checkIn>=ChekOutTime",
+          "id": "9fed5551-ec7a-4095-9069-c810a72b21ff",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"room_id\":3,\r\n    \"guest_name\":\"hakeel\",\r\n    \"check_in\": \"2025-12-08\",\r\n  \"check_out\": \"2025-12-06\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "**Description:**\n\nTests that the API rejects a reservation where the **check-in date is the same as or after the check-out date**.\n\n**Request**\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/reservations`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Error Response (400 Conflict)**\n\n{\n\nmessage: check_out must be after check_in\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "checkingIfRoomExtist",
+          "id": "44747501-eb26-4cb9-a44c-4656f211693b",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"room_id\":400,\r\n    \"guest_name\":\"hakeel\",\r\n    \"check_in\": \"2025-12-10\",\r\n  \"check_out\": \"2025-12-15\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "**Description:**\n\nTests that the API rejects a reservation if the specified `room_id` does **not exist** in the database.\n\n**Request**\n\n- **Method:** `POST`\n    \n- **URL:** `http://localhost:3000/reservations`\n    \n- **Headers:**\n    \n    - `Content-Type: application/json`\n        \n\n**Expected Response:**\n\n- **Status:** `404 Not Found`\n    \n\n{\n\n\"message\": \"Room not found\"\n\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "deleteReservations",
+          "id": "2c1ddf41-05f0-49ff-9187-dc7713f4dfe7",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"room_number\":70 ,\r\n\"category\":\"Double\",\r\n\"beds\": 2,\r\n\"price\":-1000\r\n\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations",
+                "5"
+              ]
+            },
+            "description": "**Description:**\n\nDeletes a reservation by its `id`. Returns the deleted reservation details if successful.\n\n- **Method:** `DELETE`\n    \n- **URL:** `http://localhost:3000/reservations/5`\n    \n- **Headers:**\n    \n\n**Expected Response:**\n\n- **Status:** `200 OK`"
+          },
+          "response": []
+        },
+        {
+          "name": "updatingReservationWhenItsAlreadyBooked",
+          "id": "0831d40a-c55b-4181-aa26-ffe09d9277a2",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"room_id\": 3,\r\n        \"guest_name\": \"Sh\",\r\n        \"check_in\": \"2025-12-19T18:30:00.000Z\",\r\n        \"check_out\": \"2025-12-24T18:30:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations",
+                "1"
+              ]
+            },
+            "description": "**Description:**\n\nUpdates an existing reservation by `id`. This test specifically checks that the API **prevents updating a reservation to dates that overlap** with another existing reservation for the same room.\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/reservations/1`\n    \n- **Headers:**\n    \n\n**Expected Response:**\n\n- **Status:** `409 Conflict`\n    \n\n**{**\n\nmessage:\"Room is already booked for the selected dates\"\n\n**}**"
+          },
+          "response": []
+        },
+        {
+          "name": "updatingReservtion",
+          "id": "c2358dc4-a474-4a13-acfc-403ff7226978",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"room_id\": 5,\r\n        \"guest_name\": \"Sh\",\r\n        \"check_in\": \"2025-12-19T18:30:00.000Z\",\r\n        \"check_out\": \"2025-12-24T18:30:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/reservations/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "reservations",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "67344f42-fcf9-4ac1-ac0b-1b6a37fb12a8",
+      "description": "The Reservation API allows you to **create and manage room reservations**. It validates all required fields, prevents overlapping bookings, and lists reservations by room."
+    }
+  ]
+}
