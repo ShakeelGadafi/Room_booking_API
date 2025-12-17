@@ -36,6 +36,30 @@ A RESTful API for managing room bookings and reservations, built with Node.js, E
 
    *Note: Ensure the database specified in `DB_NAME` exists.*
 
+## Database Setup
+
+You need to create the necessary tables in your PostgreSQL database. Run the following SQL queries:
+
+```sql
+-- Create rooms table
+CREATE TABLE rooms (
+    id SERIAL PRIMARY KEY,
+    room_number VARCHAR(10) UNIQUE NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    beds INTEGER NOT NULL
+);
+
+-- Create reservations table
+CREATE TABLE reservations (
+    id SERIAL PRIMARY KEY,
+    room_id INTEGER REFERENCES rooms(id) ON DELETE CASCADE,
+    guest_name VARCHAR(100) NOT NULL,
+    check_in DATE NOT NULL,
+    check_out DATE NOT NULL
+);
+```
+
 ## Running the Application
 
 To start the server in development mode (using nodemon):
