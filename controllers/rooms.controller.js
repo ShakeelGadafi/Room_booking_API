@@ -9,7 +9,7 @@ exports.listRoom = async (req, res) => {
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("error fetching rooms:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
