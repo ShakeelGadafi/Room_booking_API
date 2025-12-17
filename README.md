@@ -81,10 +81,17 @@ npm test
 ## API Endpoints
 
 ### Rooms
-- Base URL: `/rooms`
+- **List Rooms**: `GET /rooms`
+- **Create Room**: `POST /rooms`
+- **Update Room**: `PUT /rooms/:id`
+- **Delete Room**: `DELETE /rooms/:id`
 
 ### Reservations
-- Base URL: `/reservations`
+- **List Reservations**: `GET /reservations`
+- **List Reservations by Room**: `GET /reservations/room/:roomId`
+- **Create Reservation**: `POST /reservations`
+- **Update Reservation**: `PUT /reservations/:id`
+- **Delete Reservation**: `DELETE /reservations/:id`
 
 ## Project Structure
 
