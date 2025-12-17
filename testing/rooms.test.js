@@ -4,8 +4,8 @@ const request = require("supertest");
 describe("Rooms API", () => {
   test("Create room successfully", async () => {
     const res = await request(app).post("/rooms").send({
-      room_number: "310",
-      category: "single",
+      room_number: "312",
+      category: "testing",
       price: 1000,
       beds: 1,
     });
@@ -55,5 +55,12 @@ describe("Rooms API", () => {
       beds: 2,
     });
     expect(res.statusCode).toBe(400);
+  });
+
+  test("Delete a room", async () => {
+    const res = await request(app).delete("/rooms/24");
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("Room deleted successfully");
   });
 });

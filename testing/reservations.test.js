@@ -10,7 +10,7 @@ describe("Reservation API", () => {
   test("Create reservation successfully", async () => {
     const res = await request(app).post("/reservations").send({
       room_id: 5,
-      guest_name: "Test4",
+      guest_name: "Test5",
       check_in: "2026-01-10",
       check_out: "2026-01-12",
     });
@@ -49,5 +49,21 @@ describe("Reservation API", () => {
     const res = await request(app).get("/reservations/room/999");
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("No reservations found for this room");
+  });
+  test("Update reservation details", async () => {
+    const res = await request(app).put("/reservations/3").send({
+      guest_name: "Updated Guest",
+      check_in: "2026-2-21",
+      check_out: "2026-2-30",
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.reservation.guest_name).toBe("Updated Guest");
+  });
+  test("Delete a reservation", async () => {
+    const res = await request(app).delete("/reservations/1");
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("Reservation deleted successfully");
   });
 });
