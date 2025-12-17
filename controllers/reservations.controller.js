@@ -19,7 +19,7 @@ exports.createReservation = async (req, res) => {
   try {
     const { room_id, guest_name, check_in, check_out } = req.body;
 
-    //Required field validation (clean)
+    //Required field validation
     const missingField = ["room_id", "guest_name", "check_in", "check_out"]
       .find(field => req.body[field] === undefined);
 
@@ -34,7 +34,7 @@ exports.createReservation = async (req, res) => {
     const checkOutDate = new Date(check_out);
 
     if (isNaN(checkInDate) || isNaN(checkOutDate)) {
-      return res.status(400).json({ error: "Invalid date format" });
+      return res.status(400).json({ message: "Invalid date format" });
     }
 
     if (checkInDate >= checkOutDate) {
@@ -50,7 +50,7 @@ exports.createReservation = async (req, res) => {
     );
 
     if (roomExists.rows.length === 0) {
-      return res.status(404).json({ error: "Room not found" });
+      return res.status(404).json({ message: "Room not found" });
     }
 
     // Overlap check 
@@ -64,7 +64,7 @@ exports.createReservation = async (req, res) => {
 
     if (overlap.rows.length > 0) {
       return res.status(409).json({
-        error: "Room is already booked for the selected dates"
+        message: "Room is already booked for the selected dates"
       });
     }
 

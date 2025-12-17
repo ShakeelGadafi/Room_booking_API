@@ -9,8 +9,8 @@ describe("Reservation API", () => {
 
   test("Create reservation successfully", async () => {
     const res = await request(app).post("/reservations").send({
-      room_id: 1,
-      guest_name: "Test3",
+      room_id: 5,
+      guest_name: "Test4",
       check_in: "2026-01-10",
       check_out: "2026-01-12",
     });
@@ -24,12 +24,30 @@ describe("Reservation API", () => {
       check_in: "2025-12-11",
       check_out: "2025-12-13",
     });
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(409);
   });
 
   test("List reservations by room", async () => {
     const res = await request(app).get("/reservations/room/1");
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  test("should fail if check-in >= check-out", async () => {
+    const res = await request(app).post("/reservations").send({
+      room_id: 1,
+      guest_name: "Test Guest",
+      check_in: "2025-12-25",
+      check_out: "2025-12-23",
+    });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe("check_out must be after check_in");
+  });
+
+  test("should return message if no reservations exist", async () => {
+    const res = await request(app).get("/reservations/room/999");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("No reservations found for this room");
   });
 });
