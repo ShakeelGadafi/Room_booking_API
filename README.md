@@ -1,1 +1,72 @@
-# Room_booking_API
+# Room Booking API
+
+A RESTful API for managing room bookings and reservations, built with Node.js, Express, and PostgreSQL.
+
+## Prerequisites
+
+- Node.js (v14 or higher recommended)
+- PostgreSQL
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ShakeelGadafi/Room_booking_API.git
+   cd Room_booking_API
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   npm i pg express dotenv nodemon
+   ```
+
+## Configuration
+
+1. Create a `.env` file in the root directory.
+2. Add the following environment variables with your PostgreSQL database credentials:
+
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=your_username
+   DB_PASSWORD=your_password
+   DB_NAME=your_database_name
+   ```
+
+   *Note: Ensure the database specified in `DB_NAME` exists.*
+
+## Running the Application
+
+To start the server in development mode (using nodemon):
+
+```bash
+npm start
+```
+
+The server will start on `http://localhost:3000`.
+
+## Running Tests
+
+To run the test suite (using Jest):
+
+```bash
+npm test
+```
+
+## API Endpoints
+
+### Rooms
+- Base URL: `/rooms`
+
+### Reservations
+- Base URL: `/reservations`
+
+## Project Structure
+
+- `app.js`: Express application setup.
+- `server.js`: Server entry point.
+- `configure/db.js`: Database connection configuration.
+- `controllers/`: Request handlers.
+- `routes/`: API route definitions.
+- `testing/`: Unit and integration tests.

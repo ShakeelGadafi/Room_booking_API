@@ -8,7 +8,7 @@ exports.listRoom = async (req, res) => {
     }
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error("error fetching rooms:", error);
+    console.error("Error fetching rooms:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -17,25 +17,50 @@ exports.createRoom = async (req, res) => {
   try {
     const { room_number, category, price, beds } = req.body;
 
-    if (!room_number)
-      return res.status(400).json({ error: "room_number is required" });
-    if (!category)
-      return res.status(400).json({ error: "category is required" });
-    if (price == null || price <= 0)
-      return res.status(400).json({ error: "price must be > 0" });
-    if (beds == null || beds <= 0)
-      return res.status(400).json({ error: "beds must be > 0" });
+    // Required field validation
+    const missingField = ["room_number", "category", "price", "beds"].find(
+      (field) => req.body[field] === undefined
+    );
 
+    if (missingField) {
+      return res.status(400).json({ error: `${missingField} is required` });
+    }
+
+    // Type & value validation
+    if (typeof price !== "number" || price <= 0) {
+      return res
+        .status(400)
+        .json({ message: "price must be a positive number" });
+    }
+
+    if (typeof beds !== "number" || beds <= 0) {
+      return res
+        .status(400)
+        .json({ message: "beds must be a positive number" });
+    }
+    //Prevent duplicate room_number
+    const existingRoom = await pool.query(
+      "SELECT * FROM rooms WHERE room_number = $1",
+      [room_number]
+    );
+    if (existingRoom.rows.length > 0) {
+      return res.status(400).json({ message: "Room_number already exists" });
+    }
+
+    // Insert room
     const result = await pool.query(
       "INSERT INTO rooms (room_number, category, price, beds) VALUES ($1, $2, $3, $4) RETURNING *",
       [room_number, category, price, beds]
     );
+
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    // Handle duplicate room_number
     if (error.code === "23505") {
-      return res.status(400).json({ error: "Room_number already exists" });
+      return res.status(400).json({ message: "Room_number already exists" });
     }
-    console.error("error creating room:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+
+    console.error("Error creating room:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
