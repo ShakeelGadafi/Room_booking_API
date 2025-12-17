@@ -2,7 +2,7 @@ const pool = require("../configure/db");
 
 exports.listRoom = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM rooms");
+    const result = await pool.query("SELECT * FROM rooms ORDER BY id ASC");
     if (result.rows.length === 0) {
       return res.status(200).json({ message: "Database is empty" });
     }
@@ -86,3 +86,45 @@ exports.deleteRoom = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.updateRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { room_number, category, price, beds } = req.body;
+
+    // Required fields validation (optional: only if you want full replacement)
+    if (!room_number && !category && price === undefined && beds === undefined) {
+      return res.status(400).json({ message: "At least one field is required to update" });
+    }
+
+    // Type validation
+    if (price !== undefined && (typeof price !== "number" || price <= 0)) {
+      return res.status(400).json({ message: "price must be a positive number" });
+    }
+
+    if (beds !== undefined && (typeof beds !== "number" || beds <= 0)) {
+      return res.status(400).json({ message: "beds must be a positive number" });
+    }
+
+    const result = await pool.query(
+      `UPDATE rooms
+       SET room_number = COALESCE($1, room_number),
+           category = COALESCE($2, category),
+           price = COALESCE($3, price),
+           beds = COALESCE($4, beds)
+       WHERE id = $5
+       RETURNING *`,
+      [room_number, category, price, beds, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.status(200).json({ message: "Room updated successfully", room: result.rows[0] });
+  } catch (error) {
+    console.error("Error updating room:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
