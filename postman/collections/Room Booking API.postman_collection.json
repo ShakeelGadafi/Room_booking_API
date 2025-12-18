@@ -226,11 +226,11 @@
           "name": "updatingExistingRoomDetails",
           "id": "34ffb407-c599-4167-a231-ce1e3931fa95",
           "request": {
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": " { \r\n        \"room_number\": \"100\",\r\n        \"category\": \"Sin\",\r\n        \"price\": 500,\r\n        \"beds\": 1\r\n    }",
+              "raw": " { \r\n        \"room_number\": \"95\",\r\n        \"category\": \"Sin\",\r\n        \"price\": 500,\r\n        \"bed\":1\r\n     \r\n    }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -238,7 +238,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/rooms/1",
+              "raw": "http://localhost:3000/rooms/27",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -246,7 +246,7 @@
               "port": "3000",
               "path": [
                 "rooms",
-                "1"
+                "27"
               ]
             },
             "description": "**Description:**\n\nUpdates the details of an existing room by `id`. You can update one or multiple fields (partial updates are supported)\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`{\n    \n\n```\n \n\n ```"
@@ -286,11 +286,11 @@
           "name": "updatingOnlyOneAttribute",
           "id": "b3adc0b5-ee0f-439f-aff7-7d22dd1e7166",
           "request": {
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{ \r\n       \r\n        \"category\": \"mikey\"\r\n    \r\n       \r\n    }",
+              "raw": "{ \r\n       \r\n        \"category\": \"mike\"\r\n    \r\n       \r\n    }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -540,11 +540,11 @@
           "name": "updatingReservationWhenItsAlreadyBooked",
           "id": "0831d40a-c55b-4181-aa26-ffe09d9277a2",
           "request": {
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n        \"room_id\": 3,\r\n        \"guest_name\": \"Sh\",\r\n        \"check_in\": \"2025-12-19T18:30:00.000Z\",\r\n        \"check_out\": \"2025-12-24T18:30:00.000Z\"\r\n}",
+              "raw": "{\r\n        \"room_id\": 3,\r\n        \"guest_name\": \"Shak\",\r\n        \"check_in\": \"2026-2-19\",\r\n        \"check_out\": \"2026-2-24\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

@@ -20,13 +20,15 @@ exports.createReservation = async (req, res) => {
     const { room_id, guest_name, check_in, check_out } = req.body;
 
     //Required field validation
-    const missingField = ["room_id", "guest_name", "check_in", "check_out"]
-      .find(field => req.body[field] === undefined);
+    const missingField = [
+      "room_id",
+      "guest_name",
+      "check_in",
+      "check_out",
+    ].find((field) => req.body[field] === undefined);
 
     if (missingField) {
-      return res
-        .status(400)
-        .json({ error: `${missingField} is required` });
+      return res.status(400).json({ error: `${missingField} is required` });
     }
 
     // Date validation
@@ -39,21 +41,20 @@ exports.createReservation = async (req, res) => {
 
     if (checkInDate >= checkOutDate) {
       return res.status(400).json({
-        error: "check_out must be after check_in"
+        error: "check_out must be after check_in",
       });
     }
 
     //Ensure room exists
-    const roomExists = await pool.query(
-      "SELECT id FROM rooms WHERE id = $1",
-      [room_id]
-    );
+    const roomExists = await pool.query("SELECT id FROM rooms WHERE id = $1", [
+      room_id,
+    ]);
 
     if (roomExists.rows.length === 0) {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    // Overlap check 
+    // Overlap check
     const overlap = await pool.query(
       `SELECT 1 FROM reservations
        WHERE room_id = $1
@@ -64,7 +65,7 @@ exports.createReservation = async (req, res) => {
 
     if (overlap.rows.length > 0) {
       return res.status(409).json({
-        message: "Room is already booked for the selected dates"
+        message: "Room is already booked for the selected dates",
       });
     }
 
@@ -77,13 +78,11 @@ exports.createReservation = async (req, res) => {
     );
 
     res.status(201).json(result.rows[0]);
-
   } catch (error) {
     console.error("error creating reservation:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 exports.listReservationsByRoom = async (req, res) => {
   try {
@@ -119,7 +118,12 @@ exports.deleteReservation = async (req, res) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    res.status(200).json({ message: "Reservation deleted successfully", reservation: result.rows[0] });
+    res
+      .status(200)
+      .json({
+        message: "Reservation deleted successfully",
+        reservation: result.rows[0],
+      });
   } catch (error) {
     console.error("Error deleting reservation:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -133,56 +137,74 @@ exports.updateReservation = async (req, res) => {
 
     // At least one field must be provided
     if (!room_id && !guest_name && !check_in && !check_out) {
-      return res.status(400).json({ message: "At least one field is required to update" });
+      return res
+        .status(400)
+        .json({ message: "At least one field is required to update" });
     }
 
-    // Date validation if provided
-    let checkInDate = check_in ? new Date(check_in) : null;
-    let checkOutDate = check_out ? new Date(check_out) : null;
-
-    if ((check_in && isNaN(checkInDate)) || (check_out && isNaN(checkOutDate))) {
-      return res.status(400).json({ error: "Invalid date format" });
-    }
-
-    if (checkInDate && checkOutDate && checkInDate >= checkOutDate) {
-      return res.status(400).json({ error: "check_out must be after check_in" });
-    }
-
-    // Optional: Check overlapping reservations only if dates or room_id change
-    if (room_id || check_in || check_out) {
-      const overlapCheck = await pool.query(
-        `SELECT 1 FROM reservations
-         WHERE id != $1
-           AND room_id = COALESCE($2, room_id)
-           AND check_in < COALESCE($4, check_out)
-           AND check_out > COALESCE($3, check_in)`,
-        [id, room_id, checkInDate, checkOutDate]
-      );
-
-      if (overlapCheck.rows.length > 0) {
-        return res.status(409).json({ error: "Room is already booked for the selected dates" });
-      }
-    }
-
-    const result = await pool.query(
-      `UPDATE reservations
-       SET room_id = COALESCE($2, room_id),
-           guest_name = COALESCE($3, guest_name),
-           check_in = COALESCE($4, check_in),
-           check_out = COALESCE($5, check_out)
-       WHERE id = $1
-       RETURNING *`,
-      [id, room_id, guest_name, checkInDate, checkOutDate]
+    // Fetch existing reservation
+    const existing = await pool.query(
+      "SELECT * FROM reservations WHERE id = $1",
+      [id]
     );
 
-    if (result.rows.length === 0) {
+    if (existing.rows.length === 0) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    res.status(200).json({ message: "Reservation updated successfully", reservation: result.rows[0] });
+    const current = existing.rows[0];
+
+    // Use existing values if not provided
+    const newRoomId = room_id ?? current.room_id;
+    const newGuestName = guest_name ?? current.guest_name;
+    const newCheckIn = check_in ? new Date(check_in) : current.check_in;
+    const newCheckOut = check_out ? new Date(check_out) : current.check_out;
+
+    // Date validation
+    if (isNaN(newCheckIn) || isNaN(newCheckOut)) {
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+
+    if (newCheckIn >= newCheckOut) {
+      return res
+        .status(400)
+        .json({ error: "check_out must be after check_in" });
+    }
+
+    // Overlap check
+    const overlapCheck = await pool.query(
+      `SELECT 1 FROM reservations
+       WHERE id != $1
+         AND room_id = $2
+         AND check_in < $4
+         AND check_out > $3`,
+      [id, newRoomId, newCheckIn, newCheckOut]
+    );
+
+    if (overlapCheck.rows.length > 0) {
+      return res.status(409).json({
+        message: "Room is already booked for the selected dates",
+      });
+    }
+
+    // Update reservation
+    const result = await pool.query(
+      `UPDATE reservations
+       SET room_id = $2,
+           guest_name = $3,
+           check_in = $4,
+           check_out = $5
+       WHERE id = $1
+       RETURNING *`,
+      [id, newRoomId, newGuestName, newCheckIn, newCheckOut]
+    );
+
+    res.status(200).json({
+      message: "Reservation updated successfully",
+      reservation: result.rows[0],
+    });
   } catch (error) {
     console.error("Error updating reservation:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-

@@ -51,7 +51,7 @@ describe("Reservation API", () => {
     expect(res.body.message).toBe("No reservations found for this room");
   });
   test("Update reservation details", async () => {
-    const res = await request(app).put("/reservations/3").send({
+    const res = await request(app).patch("/reservations/3").send({
       guest_name: "Updated Guest",
       check_in: "2026-2-21",
       check_out: "2026-2-30",

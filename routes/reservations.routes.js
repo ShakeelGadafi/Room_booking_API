@@ -6,6 +6,6 @@ router.get("/",listReservations)
 router.get("/room/:roomId", listReservationsByRoom);
 router.post("/",createReservation);
 router.delete("/:id", deleteReservation);
-router.put("/:id",updateReservation);
+router.patch("/:id",updateReservation);
 
 module.exports = router;

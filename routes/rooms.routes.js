@@ -5,6 +5,6 @@ const {createRoom , listRoom, deleteRoom, updateRoom } = require('../controllers
 router.get("/",listRoom);
 router.post("/",createRoom);
 router.delete("/:id",deleteRoom);
-router.put("/:id",updateRoom);
+router.patch("/:id",updateRoom);
 
 module.exports = router;
