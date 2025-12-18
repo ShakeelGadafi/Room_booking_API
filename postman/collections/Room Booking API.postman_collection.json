@@ -249,7 +249,7 @@
                 "27"
               ]
             },
-            "description": "**Description:**\n\nUpdates the details of an existing room by `id`. You can update one or multiple fields (partial updates are supported)\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`{\n    \n\n```\n \n\n ```"
+            "description": "**Description:**\n\nPartially updates an existing room by its `id`. Only the fields provided in the request body will be updated; all other fields remain unchanged.\n\n- **Method:** `PATCH`\n    \n- **URL:** `http://localhost:3000/rooms/27`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`{"
           },
           "response": []
         },
@@ -309,7 +309,7 @@
                 "1"
               ]
             },
-            "description": "**Description:**\n\nUpdates the details of an existing room by `id`. You can update one or multiple fields (partial updates are supported)\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`"
+            "description": "**Description:**\n\nUpdates **only one attribute** of an existing room. All other room details remain unchanged\n\n- **Method:** `PATCH`\n    \n- **URL:** `http://localhost:3000/rooms/1`\n    \n- **Headers:**\n    \n\n**Expected Response**\n\n- **Status:** `200 OK`"
           },
           "response": []
         }
@@ -563,7 +563,7 @@
                 "1"
               ]
             },
-            "description": "**Description:**\n\nUpdates an existing reservation by `id`. This test specifically checks that the API **prevents updating a reservation to dates that overlap** with another existing reservation for the same room.\n\n- **Method:** `PUT`\n    \n- **URL:** `http://localhost:3000/reservations/1`\n    \n- **Headers:**\n    \n\n**Expected Response:**\n\n- **Status:** `409 Conflict`\n    \n\n**{**\n\nmessage:\"Room is already booked for the selected dates\"\n\n**}**"
+            "description": "**Description:**  \nAttempts to update an existing reservation with new dates that **overlap an already booked period** for the same room.  \nThis request verifies that the API **rejects overlapping bookings** during updates.\n\n- **Method:** `PATCH`\n    \n- **URL:** `http://localhost:3000/reservations/1`\n    \n- **Headers:**\n    \n\n**Expected Response:**\n\n- **Status:** `409 Conflict`\n    \n\n**{**\n\nmessage:\"Room is already booked for the selected dates\"\n\n**}**"
           },
           "response": []
         },
@@ -571,11 +571,11 @@
           "name": "updatingReservtion",
           "id": "c2358dc4-a474-4a13-acfc-403ff7226978",
           "request": {
-            "method": "PUT",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n        \"room_id\": 5,\r\n        \"guest_name\": \"Sh\",\r\n        \"check_in\": \"2025-12-19T18:30:00.000Z\",\r\n        \"check_out\": \"2025-12-24T18:30:00.000Z\"\r\n}",
+              "raw": "{\r\n        \"room_id\": 5,\r\n        \"guest_name\": \"Shak\"\r\n        \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -593,7 +593,8 @@
                 "reservations",
                 "1"
               ]
-            }
+            },
+            "description": "**Description:**\n\nPartially updates an existing reservation by its `id`. Only the fields provided in the request body are updated; all other reservation details remain unchanged."
           },
           "response": []
         }
